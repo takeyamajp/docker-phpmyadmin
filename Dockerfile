@@ -11,4 +11,4 @@ EXPOSE 80
 
 ENTRYPOINT ["/run.sh"]
 
-CMD ["phpmyadmin"]
+CMD ["supervisord", "-n"]
