@@ -10,6 +10,9 @@ RUN yum -y install httpd mod_ssl; yum clean all; \
     sed -i 's/DocumentRoot "\/var\/www\/html"/DocumentRoot "\/usr\/share\/phpMyAdmin"/1' /etc/httpd/conf/httpd.conf; \
     sed -i 's/<Directory "\/var\/www\/html">/<Directory "\/usr\/share\/phpMyAdmin">"/1' /etc/httpd/conf/httpd.conf;
 
+# prevent error AH00558 on stdout
+RUN echo 'ServerName ${HOSTNAME}' >> /etc/httpd/conf.d/additional.conf
+
 # PHP
 RUN yum -y install epel-release; yum clean all; \
     rpm -Uvh http://rpms.famillecollet.com/enterprise/remi-release-7.rpm; \
