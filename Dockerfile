@@ -32,8 +32,7 @@ RUN yum -y install --enablerepo=remi,remi-php72 phpMyAdmin; yum clean all; \
     } >> /etc/httpd/conf.d/phpMyAdmin.conf;
 
 # entrypoint
-RUN mkdir /share; \
-    chown -R apache:apache /share; \
+RUN mkdir /dump; \
     { \
     echo '#!/bin/bash -eu'; \
     echo '{'; \
@@ -42,10 +41,11 @@ RUN mkdir /share; \
     echo '    echo "\$cfg['\''Servers'\''][\$i]['\''port'\''] = '\''${PMA_PORT}'\'';"'; \
     echo '    echo "\$cfg['\''Servers'\''][\$i]['\''user'\''] = '\''${PMA_USER}'\'';"'; \
     echo '    echo "\$cfg['\''Servers'\''][\$i]['\''password'\''] = '\''${PMA_PASSWORD}'\'';"'; \
-    echo '    echo "\$cfg['\''UploadDir'\''] = '\''/share'\'';"'; \
-    echo '    echo "\$cfg['\''SaveDir'\''] = '\''/share'\'';"'; \
+    echo '    echo "\$cfg['\''UploadDir'\''] = '\''/dump'\'';"'; \
+    echo '    echo "\$cfg['\''SaveDir'\''] = '\''/dump'\'';"'; \
     echo '} >> /etc/phpMyAdmin/config.inc.php'; \
     echo 'htpasswd -b -m -c /usr/share/phpMyAdmin/.htpasswd ${BASIC_AUTH_USER} ${BASIC_AUTH_PASSWORD}'; \
+    echo 'chown -R apache:apache /dump'; \
     echo 'exec "$@"'; \
     } > /usr/local/bin/entrypoint.sh; \
     chmod +x /usr/local/bin/entrypoint.sh;
@@ -59,7 +59,7 @@ ENV PMA_PORT 3306
 ENV PMA_USER root
 ENV PMA_PASSWORD root
 
-VOLUME /share
+VOLUME /dump
 
 EXPOSE 80
 EXPOSE 443
