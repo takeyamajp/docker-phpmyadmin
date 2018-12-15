@@ -36,7 +36,7 @@ RUN mkdir /dump; \
     { \
     echo '#!/bin/bash -eu'; \
     echo 'if [ -e /usr/share/phpMyAdmin/.htpasswd ]; then'; \
-    echo '    head -n -7 /etc/phpMyAdmin/config.inc.php'; \
+    echo '    head -n -7 /etc/phpMyAdmin/config.inc.php > /etc/phpMyAdmin/config.inc.php'; \
     echo 'fi'; \
     echo '{'; \
     echo '    echo "\$cfg['\''Servers'\''][\$i]['\''auth_type'\''] = '\''config'\'';"'; \
