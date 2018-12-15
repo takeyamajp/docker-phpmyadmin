@@ -35,6 +35,9 @@ RUN yum -y install --enablerepo=remi,remi-php72 phpMyAdmin; yum clean all; \
 RUN mkdir /dump; \
     { \
     echo '#!/bin/bash -eu'; \
+    echo 'if [ -e /usr/share/phpMyAdmin/.htpasswd ]; then'; \
+    echo '    head -n -7 /etc/phpMyAdmin/config.inc.php'; \
+    echo 'fi'; \
     echo '{'; \
     echo '    echo "\$cfg['\''Servers'\''][\$i]['\''auth_type'\''] = '\''config'\'';"'; \
     echo '    echo "\$cfg['\''Servers'\''][\$i]['\''host'\''] = '\''${PMA_HOST}'\'';"'; \
