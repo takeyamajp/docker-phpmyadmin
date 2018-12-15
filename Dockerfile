@@ -47,6 +47,7 @@ RUN mkdir /dump; \
     echo '    echo "\$cfg['\''UploadDir'\''] = '\''/dump'\'';"'; \
     echo '    echo "\$cfg['\''SaveDir'\''] = '\''/dump'\'';"'; \
     echo '} >> /etc/phpMyAdmin/config.inc.php'; \
+    echo 'cp /etc/phpMyAdmin/config.inc.php /dump/config.inc.php'; \
     echo 'htpasswd -b -m -c /usr/share/phpMyAdmin/.htpasswd ${BASIC_AUTH_USER} ${BASIC_AUTH_PASSWORD}'; \
     echo 'chown -R apache:apache /dump'; \
     echo 'exec "$@"'; \
