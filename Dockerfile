@@ -36,7 +36,9 @@ RUN mkdir /dump; \
     { \
     echo '#!/bin/bash -eu'; \
     echo 'if [ -e /usr/share/phpMyAdmin/.htpasswd ]; then'; \
-    echo '    head -n -7 /etc/phpMyAdmin/config.inc.php > /etc/phpMyAdmin/config.inc.php'; \
+    echo '    cp /etc/phpMyAdmin/config.inc.php /tmp/config.inc.php'; \
+    echo '    head -n -7 /tmp/config.inc.php > /etc/phpMyAdmin/config.inc.php'; \
+    echo '    rm /tmp/config.inc.php'; \
     echo 'fi'; \
     echo '{'; \
     echo '    echo "\$cfg['\''Servers'\''][\$i]['\''auth_type'\''] = '\''config'\'';"'; \
@@ -47,7 +49,6 @@ RUN mkdir /dump; \
     echo '    echo "\$cfg['\''UploadDir'\''] = '\''/dump'\'';"'; \
     echo '    echo "\$cfg['\''SaveDir'\''] = '\''/dump'\'';"'; \
     echo '} >> /etc/phpMyAdmin/config.inc.php'; \
-    echo 'cp /etc/phpMyAdmin/config.inc.php /dump/config.inc.php'; \
     echo 'htpasswd -b -m -c /usr/share/phpMyAdmin/.htpasswd ${BASIC_AUTH_USER} ${BASIC_AUTH_PASSWORD}'; \
     echo 'chown -R apache:apache /dump'; \
     echo 'exec "$@"'; \
