@@ -1,3 +1,2 @@
-FROM phpmyadmin/phpmyadmin
-
+FROM centos:centos7
 MAINTAINER "Hiroki Takeyama"
