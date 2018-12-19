@@ -8,6 +8,7 @@ RUN rm -f /etc/localtime; \
 # httpd
 RUN yum -y install httpd mod_ssl; yum clean all; \
     sed -i 's/DocumentRoot "\/var\/www\/html"/DocumentRoot "\/usr\/share\/phpMyAdmin"/1' /etc/httpd/conf/httpd.conf; \
+    sed -i '/^<Directory "\/var\/www\/html">$/,/^<IfModule dir_module>$/ s/AllowOverride None/AllowOverride All/1' /etc/httpd/conf/httpd.conf; \
     sed -i 's/<Directory "\/var\/www\/html">/<Directory "\/usr\/share\/phpMyAdmin">"/1' /etc/httpd/conf/httpd.conf;
 
 # prevent error AH00558 on stdout
@@ -29,7 +30,15 @@ RUN yum -y install --enablerepo=remi,remi-php72 phpMyAdmin; yum clean all; \
     echo '  AuthUserFile /usr/share/phpMyAdmin/.htpasswd'; \
     echo '  Require valid-user'; \
     echo '</Directory>'; \
-    } >> /etc/httpd/conf.d/phpMyAdmin.conf;
+    } >> /etc/httpd/conf.d/phpMyAdmin.conf; \
+    { \
+    echo '<IfModule mod_rewrite.c>'; \
+    echo 'RewriteEngine On'; \
+    echo 'RewriteCond %{HTTPS} off'; \
+    echo 'RewriteCond %{HTTP:X-Forwarded-Proto} !https [NC]'; \
+    echo 'RewriteRule ^.*$ https://%{HTTP_HOST}%{REQUEST_URI} [R=301,L]'; \
+    echo '</IfModule>'; \
+    } >> /usr/share/phpMyAdmin/.htaccess;
 
 # entrypoint
 RUN mkdir /dump; \
