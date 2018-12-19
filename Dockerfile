@@ -33,10 +33,10 @@ RUN yum -y install --enablerepo=remi,remi-php72 phpMyAdmin; yum clean all; \
     } >> /etc/httpd/conf.d/phpMyAdmin.conf; \
     { \
     echo '<IfModule mod_rewrite.c>'; \
-    echo 'RewriteEngine On'; \
-    echo 'RewriteCond %{HTTPS} off'; \
-    echo 'RewriteCond %{HTTP:X-Forwarded-Proto} !https [NC]'; \
-    echo 'RewriteRule ^.*$ https://%{HTTP_HOST}%{REQUEST_URI} [R=301,L]'; \
+    echo '  RewriteEngine On'; \
+    echo '  RewriteCond %{HTTPS} off'; \
+    echo '  RewriteCond %{HTTP:X-Forwarded-Proto} !https [NC]'; \
+    echo '  RewriteRule ^.*$ https://%{HTTP_HOST}%{REQUEST_URI} [R=301,L]'; \
     echo '</IfModule>'; \
     } >> /usr/share/phpMyAdmin/.htaccess;
 
