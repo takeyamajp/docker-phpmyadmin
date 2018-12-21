@@ -30,32 +30,38 @@ RUN yum -y install --enablerepo=remi,remi-php72 phpMyAdmin; yum clean all; \
     echo '  AuthUserFile /usr/share/phpMyAdmin/.htpasswd'; \
     echo '  Require valid-user'; \
     echo '</Directory>'; \
-    } >> /etc/httpd/conf.d/phpMyAdmin.conf; \
-    { \
-    echo '<IfModule mod_rewrite.c>'; \
-    echo '  RewriteEngine On'; \
-    echo '  RewriteCond %{HTTPS} off'; \
-    echo '  RewriteCond %{HTTP:X-Forwarded-Proto} !https [NC]'; \
-    echo '  RewriteRule ^.*$ https://%{HTTP_HOST}%{REQUEST_URI} [R=301,L]'; \
-    echo '</IfModule>'; \
-    } >> /usr/share/phpMyAdmin/.htaccess;
+    } >> /etc/httpd/conf.d/phpMyAdmin.conf;
 
 # entrypoint
 RUN mkdir /dump; \
     { \
     echo '#!/bin/bash -eu'; \
-    echo 'if [ -e /usr/share/phpMyAdmin/.htpasswd ]; then'; \
-    echo '  head -n -7 /etc/phpMyAdmin/config.inc.php > /etc/phpMyAdmin/tmp.config.inc.php'; \
-    echo '  mv -f /etc/phpMyAdmin/tmp.config.inc.php /etc/phpMyAdmin/config.inc.php'; \
+    echo 'if [ -e /usr/share/phpMyAdmin/.htaccess ]; then'; \
+    echo '  sed -i '\''/^# BEGIN REQUIRE SSL$/,/^# END REQUIRE SSL$/d'\'' /usr/share/phpMyAdmin/.htaccess'; \
     echo 'fi'; \
+    echo 'if [ ${REQUIRE_SSL,,} = "true" ]; then'; \
+    echo '  {'; \
+    echo '  echo "# BEGIN REQUIRE SSL"'; \
+    echo '  echo "<IfModule mod_rewrite.c>"'; \
+    echo '  echo "  RewriteEngine On"'; \
+    echo '  echo "  RewriteCond %{HTTPS} off"'; \
+    echo '  echo "  RewriteCond %{HTTP:X-Forwarded-Proto} !https [NC]"'; \
+    echo '  echo "  RewriteRule ^.*$ https://%{HTTP_HOST}%{REQUEST_URI} [R=301,L]"'; \
+    echo '  echo "</IfModule>"'; \
+    echo '  echo "# END REQUIRE SSL"'; \
+    echo '  } >> /usr/share/phpMyAdmin/.htaccess'; \
+    echo 'fi'; \
+    echo 'sed -i '\''/^# BEGIN DB SETTINGS$/,/^# END DB SETTINGS$/d'\'' /etc/phpMyAdmin/config.inc.php'; \
     echo '{'; \
-    echo '  echo "\$cfg['\''Servers'\''][\$i]['\''auth_type'\''] = '\''config'\'';"'; \
-    echo '  echo "\$cfg['\''Servers'\''][\$i]['\''host'\''] = '\''${PMA_HOST}'\'';"'; \
-    echo '  echo "\$cfg['\''Servers'\''][\$i]['\''port'\''] = '\''${PMA_PORT}'\'';"'; \
-    echo '  echo "\$cfg['\''Servers'\''][\$i]['\''user'\''] = '\''${PMA_USER}'\'';"'; \
-    echo '  echo "\$cfg['\''Servers'\''][\$i]['\''password'\''] = '\''${PMA_PASSWORD}'\'';"'; \
-    echo '  echo "\$cfg['\''UploadDir'\''] = '\''/dump'\'';"'; \
-    echo '  echo "\$cfg['\''SaveDir'\''] = '\''/dump'\'';"'; \
+    echo 'echo "# BEGIN DB SETTINGS"'; \
+    echo 'echo "\$cfg['\''Servers'\''][\$i]['\''auth_type'\''] = '\''config'\'';"'; \
+    echo 'echo "\$cfg['\''Servers'\''][\$i]['\''host'\''] = '\''${PMA_HOST}'\'';"'; \
+    echo 'echo "\$cfg['\''Servers'\''][\$i]['\''port'\''] = '\''${PMA_PORT}'\'';"'; \
+    echo 'echo "\$cfg['\''Servers'\''][\$i]['\''user'\''] = '\''${PMA_USER}'\'';"'; \
+    echo 'echo "\$cfg['\''Servers'\''][\$i]['\''password'\''] = '\''${PMA_PASSWORD}'\'';"'; \
+    echo 'echo "\$cfg['\''UploadDir'\''] = '\''/dump'\'';"'; \
+    echo 'echo "\$cfg['\''SaveDir'\''] = '\''/dump'\'';"'; \
+    echo 'echo "# END DB SETTINGS"'; \
     echo '} >> /etc/phpMyAdmin/config.inc.php'; \
     echo 'htpasswd -bmc /usr/share/phpMyAdmin/.htpasswd ${BASIC_AUTH_USER} ${BASIC_AUTH_PASSWORD} &>/dev/null'; \
     echo 'chown -R apache:apache /dump'; \
@@ -63,6 +69,8 @@ RUN mkdir /dump; \
     } > /usr/local/bin/entrypoint.sh; \
     chmod +x /usr/local/bin/entrypoint.sh;
 ENTRYPOINT ["entrypoint.sh"]
+
+ENV REQUIRE_SSL true
 
 ENV BASIC_AUTH_USER user
 ENV BASIC_AUTH_PASSWORD user
