@@ -1,6 +1,8 @@
 FROM centos:centos7  
 MAINTAINER "Hiroki Takeyama"
 
+ENV REQUIRE_SSL true
+
 ENV BASIC_AUTH_USER user  
 ENV BASIC_AUTH_PASSWORD user
 
