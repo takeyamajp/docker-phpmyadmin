@@ -60,7 +60,7 @@ RUN mkdir /dump; \
     echo '  rm -f /usr/share/phpMyAdmin/.htpasswd'; \
     echo 'fi'; \
     echo 'if [ ${REQUIRE_BASIC_AUTH,,} = "true" ]; then'; \
-    echo '  { \'; \
+    echo '  {'; \
     echo '  echo "<Directory /usr/share/phpMyAdmin/>"'; \
     echo '  echo "  AuthType Basic"'; \
     echo '  echo "  AuthName '\''Basic Authentication'\''"'; \
