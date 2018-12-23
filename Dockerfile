@@ -56,20 +56,18 @@ RUN mkdir /dump; \
     echo 'echo "# END DB SETTINGS"'; \
     echo '} >> /etc/phpMyAdmin/config.inc.php'; \
     echo 'if [ -e /usr/share/phpMyAdmin/.htpasswd ]; then'; \
-    echo '  sed -i '\''/^# BEGIN BASIC AUTH$/,/^# END BASIC AUTH$/d'\'' /etc/httpd/conf.d/phpMyAdmin.conf'; \
+    echo '  rm -f /etc/httpd/conf.d/basicAuth.conf'; \
     echo '  rm -f /usr/share/phpMyAdmin/.htpasswd'; \
     echo 'fi'; \
     echo 'if [ ${REQUIRE_BASIC_AUTH,,} = "true" ]; then'; \
     echo '  {'; \
-    echo '  echo "# BEGIN BASIC AUTH"'; \
     echo '  echo "<Directory /usr/share/phpMyAdmin/>"'; \
     echo '  echo "  AuthType Basic"'; \
     echo '  echo "  AuthName '\''Basic Authentication'\''"'; \
     echo '  echo "  AuthUserFile /usr/share/phpMyAdmin/.htpasswd"'; \
     echo '  echo "  Require valid-user"'; \
     echo '  echo "</Directory>"'; \
-    echo '  echo "# END BASIC AUTH"'; \
-    echo '  } >> /etc/httpd/conf.d/phpMyAdmin.conf'; \
+    echo '  } >> /etc/httpd/conf.d/basicAuth.conf'; \
     echo '  htpasswd -bmc /usr/share/phpMyAdmin/.htpasswd ${BASIC_AUTH_USER} ${BASIC_AUTH_PASSWORD} &>/dev/null'; \
     echo 'fi'; \
     echo 'chown -R apache:apache /dump'; \
