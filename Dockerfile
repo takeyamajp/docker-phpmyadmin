@@ -74,6 +74,7 @@ RUN mkdir /dump; \
     echo 'fi'; \
     echo 'chown -R apache:apache /dump'; \
     echo 'cp /usr/local/bin/entrypoint.sh /dump/entrypoint.sh'; \
+    echo 'cp /etc/httpd/conf.d/phpMyAdmin.conf /dump/phpMyAdmin.conf'; \
     echo 'exec "$@"'; \
     } > /usr/local/bin/entrypoint.sh; \
     chmod +x /usr/local/bin/entrypoint.sh;
