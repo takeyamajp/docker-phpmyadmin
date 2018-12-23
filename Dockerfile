@@ -71,6 +71,7 @@ RUN mkdir /dump; \
     echo '  htpasswd -bmc /usr/share/phpMyAdmin/.htpasswd ${BASIC_AUTH_USER} ${BASIC_AUTH_PASSWORD} &>/dev/null'; \
     echo 'fi'; \
     echo 'chown -R apache:apache /dump'; \
+    echo 'cp /usr/local/bin/entrypoint.sh /dump/entrypoint.sh'; \
     echo 'exec "$@"'; \
     } > /usr/local/bin/entrypoint.sh; \
     chmod +x /usr/local/bin/entrypoint.sh;
