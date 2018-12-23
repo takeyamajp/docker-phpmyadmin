@@ -22,15 +22,7 @@ RUN yum -y install epel-release; yum clean all; \
 
 # phpMyAdmin
 RUN yum -y install --enablerepo=remi,remi-php72 phpMyAdmin; yum clean all; \
-    sed -i '/^<Directory \/usr\/share\/phpMyAdmin\/>$/,/^<Directory \/usr\/share\/phpMyAdmin\/setup\/>$/ s/Require local/Require all granted/1' /etc/httpd/conf.d/phpMyAdmin.conf; \
-    { \
-    echo '<Directory /usr/share/phpMyAdmin/>'; \
-    echo '  AuthType Basic'; \
-    echo '  AuthName "Basic Authentication"'; \
-    echo '  AuthUserFile /usr/share/phpMyAdmin/.htpasswd'; \
-    echo '  Require valid-user'; \
-    echo '</Directory>'; \
-    } >> /etc/httpd/conf.d/phpMyAdmin.conf;
+    sed -i '/^<Directory \/usr\/share\/phpMyAdmin\/>$/,/^<Directory \/usr\/share\/phpMyAdmin\/setup\/>$/ s/Require local/Require all granted/1' /etc/httpd/conf.d/phpMyAdmin.conf;
 
 # entrypoint
 RUN mkdir /dump; \
@@ -63,7 +55,21 @@ RUN mkdir /dump; \
     echo 'echo "\$cfg['\''SaveDir'\''] = '\''/dump'\'';"'; \
     echo 'echo "# END DB SETTINGS"'; \
     echo '} >> /etc/phpMyAdmin/config.inc.php'; \
-    echo 'htpasswd -bmc /usr/share/phpMyAdmin/.htpasswd ${BASIC_AUTH_USER} ${BASIC_AUTH_PASSWORD} &>/dev/null'; \
+    echo 'if [ -e /etc/httpd/conf.d/basicAuth.conf ]; then'; \
+    echo '  rm -f /etc/httpd/conf.d/basicAuth.conf'; \
+    echo '  rm -f /usr/share/phpMyAdmin/.htpasswd'; \
+    echo 'fi'; \
+    echo 'if [ ${REQUIRE_BASIC_AUTH,,} = "true" ]; then'; \
+    echo '  { \'; \
+    echo '  echo "<Directory /usr/share/phpMyAdmin/>"'; \
+    echo '  echo "  AuthType Basic"'; \
+    echo '  echo "  AuthName '\''Basic Authentication'\''"'; \
+    echo '  echo "  AuthUserFile /usr/share/phpMyAdmin/.htpasswd"'; \
+    echo '  echo "  Require valid-user"'; \
+    echo '  echo "</Directory>"'; \
+    echo '  } > /etc/httpd/conf.d/basicAuth.conf'; \
+    echo '  htpasswd -bmc /usr/share/phpMyAdmin/.htpasswd ${BASIC_AUTH_USER} ${BASIC_AUTH_PASSWORD} &>/dev/null'; \
+    echo 'fi'; \
     echo 'chown -R apache:apache /dump'; \
     echo 'exec "$@"'; \
     } > /usr/local/bin/entrypoint.sh; \
@@ -72,6 +78,7 @@ ENTRYPOINT ["entrypoint.sh"]
 
 ENV REQUIRE_SSL true
 
+ENV REQUIRE_BASIC_AUTH true
 ENV BASIC_AUTH_USER user
 ENV BASIC_AUTH_PASSWORD user
 
