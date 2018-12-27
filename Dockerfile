@@ -6,7 +6,7 @@ RUN rm -f /etc/localtime; \
     ln -fs /usr/share/zoneinfo/Asia/Tokyo /etc/localtime;
 
 # httpd (ius for CentOS7)
-RUN yum -y install mailcap; yum clean all; \
+RUN yum -y install system-logos openssl mailcap; yum clean all; \
     yum -y install "https://centos7.iuscommunity.org/ius-release.rpm"; yum clean all; \
     yum -y install --disablerepo=base,extras,updates --enablerepo=ius httpd mod_ssl; yum clean all; \
     sed -i 's/DocumentRoot "\/var\/www\/html"/DocumentRoot "\/usr\/share\/phpMyAdmin"/1' /etc/httpd/conf/httpd.conf; \
