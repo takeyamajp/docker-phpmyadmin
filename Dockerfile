@@ -19,11 +19,11 @@ RUN echo 'ServerName ${HOSTNAME}' >> /etc/httpd/conf.d/additional.conf;
 # PHP (remi for CentOS7)
 RUN yum -y install epel-release; yum clean all; \
     rpm -Uvh http://rpms.famillecollet.com/enterprise/remi-release-7.rpm; \
-    yum -y install --disablerepo=ius --enablerepo=remi,remi-php72 php php-mbstring php-curl php-mysqlnd php-opcache php-pecl-apcu; yum clean all; \
+    yum -y install --disablerepo=ius --enablerepo=remi,remi-php73 php php-mbstring php-curl php-mysqlnd php-opcache php-pecl-apcu; yum clean all; \
     sed -i 's/^;date\.timezone =$/date\.timezone=Asia\/Tokyo/1' /etc/php.ini;
 
 # phpMyAdmin
-RUN yum -y install --disablerepo=ius --enablerepo=remi,remi-php72 phpMyAdmin; yum clean all; \
+RUN yum -y install --disablerepo=ius --enablerepo=remi,remi-php73 phpMyAdmin; yum clean all; \
     sed -i '/^<Directory \/usr\/share\/phpMyAdmin\/>$/,/^<Directory \/usr\/share\/phpMyAdmin\/setup\/>$/ s/Require local/Require all granted/1' /etc/httpd/conf.d/phpMyAdmin.conf;
 
 # entrypoint
