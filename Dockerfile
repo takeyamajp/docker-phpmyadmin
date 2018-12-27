@@ -6,9 +6,9 @@ RUN rm -f /etc/localtime; \
     ln -fs /usr/share/zoneinfo/Asia/Tokyo /etc/localtime;
 
 # httpd (ius for CentOS7)
-RUN yum -y install epel-release; yum clean all; \
+RUN yum -y install mailcap; yum clean all; \
     yum -y install "https://centos7.iuscommunity.org/ius-release.rpm"; yum clean all; \
-    yum -y install --disablerepo=base,extras,updates --enablerepo=ius mailcap httpd mod_ssl; yum clean all; \
+    yum -y install --disablerepo=base,extras,updates --enablerepo=ius httpd mod_ssl; yum clean all; \
     sed -i 's/DocumentRoot "\/var\/www\/html"/DocumentRoot "\/usr\/share\/phpMyAdmin"/1' /etc/httpd/conf/httpd.conf; \
     sed -i '/^<Directory "\/var\/www\/html">$/,/^<IfModule dir_module>$/ s/AllowOverride None/AllowOverride All/1' /etc/httpd/conf/httpd.conf; \
     sed -i 's/<Directory "\/var\/www\/html">/<Directory "\/usr\/share\/phpMyAdmin">"/1' /etc/httpd/conf/httpd.conf;
@@ -17,7 +17,8 @@ RUN yum -y install epel-release; yum clean all; \
 RUN echo 'ServerName ${HOSTNAME}' >> /etc/httpd/conf.d/additional.conf;
 
 # PHP (remi for CentOS7)
-RUN rpm -Uvh http://rpms.famillecollet.com/enterprise/remi-release-7.rpm; \
+RUN yum -y install epel-release; yum clean all; \
+    rpm -Uvh http://rpms.famillecollet.com/enterprise/remi-release-7.rpm; \
     yum -y install --disablerepo=ius --enablerepo=remi,remi-php72 php php-mbstring php-curl php-mysqlnd php-opcache php-pecl-apcu; yum clean all; \
     sed -i 's/^;date\.timezone =$/date\.timezone=Asia\/Tokyo/1' /etc/php.ini;
 
