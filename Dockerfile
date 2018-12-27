@@ -8,7 +8,7 @@ RUN rm -f /etc/localtime; \
 # httpd (ius for CentOS7)
 RUN yum -y install epel-release; yum clean all; \
     yum -y install "https://centos7.iuscommunity.org/ius-release.rpm"; yum clean all; \
-    yum -y install --disablerepo=base,extras,updates --enablerepo=ius httpd mod_ssl; yum clean all; \
+    yum -y install --disablerepo=base,extras,updates --enablerepo=ius mailcap httpd mod_ssl; yum clean all; \
     sed -i 's/DocumentRoot "\/var\/www\/html"/DocumentRoot "\/usr\/share\/phpMyAdmin"/1' /etc/httpd/conf/httpd.conf; \
     sed -i '/^<Directory "\/var\/www\/html">$/,/^<IfModule dir_module>$/ s/AllowOverride None/AllowOverride All/1' /etc/httpd/conf/httpd.conf; \
     sed -i 's/<Directory "\/var\/www\/html">/<Directory "\/usr\/share\/phpMyAdmin">"/1' /etc/httpd/conf/httpd.conf;
