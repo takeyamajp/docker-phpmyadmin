@@ -27,7 +27,7 @@ RUN yum -y install --disablerepo=ius --enablerepo=remi,remi-php72 phpMyAdmin; yu
     sed -i '/^<Directory \/usr\/share\/phpMyAdmin\/>$/,/^<Directory \/usr\/share\/phpMyAdmin\/setup\/>$/ s/Require local/Require all granted/1' /etc/httpd/conf.d/phpMyAdmin.conf;
 
 # entrypoint
-RUN mkdir /dump; \
+RUN mkdir /backup; \
     { \
     echo '#!/bin/bash -eu'; \
     echo 'if [ -e /usr/share/phpMyAdmin/.htaccess ]; then'; \
@@ -53,8 +53,8 @@ RUN mkdir /dump; \
     echo 'echo "\$cfg['\''Servers'\''][\$i]['\''port'\''] = '\''${PMA_PORT}'\'';"'; \
     echo 'echo "\$cfg['\''Servers'\''][\$i]['\''user'\''] = '\''${PMA_USER}'\'';"'; \
     echo 'echo "\$cfg['\''Servers'\''][\$i]['\''password'\''] = '\''${PMA_PASSWORD}'\'';"'; \
-    echo 'echo "\$cfg['\''UploadDir'\''] = '\''/dump'\'';"'; \
-    echo 'echo "\$cfg['\''SaveDir'\''] = '\''/dump'\'';"'; \
+    echo 'echo "\$cfg['\''UploadDir'\''] = '\''/backup'\'';"'; \
+    echo 'echo "\$cfg['\''SaveDir'\''] = '\''/backup'\'';"'; \
     echo 'echo "# END DB SETTINGS"'; \
     echo '} >> /etc/phpMyAdmin/config.inc.php'; \
     echo 'if [ -e /usr/share/phpMyAdmin/.htpasswd ]; then'; \
@@ -74,7 +74,7 @@ RUN mkdir /dump; \
     echo '  } >> /etc/httpd/conf.d/phpMyAdmin.conf'; \
     echo '  htpasswd -bmc /usr/share/phpMyAdmin/.htpasswd ${BASIC_AUTH_USER} ${BASIC_AUTH_PASSWORD} &>/dev/null'; \
     echo 'fi'; \
-    echo 'chown -R apache:apache /dump'; \
+    echo 'chown -R apache:apache /backup'; \
     echo 'exec "$@"'; \
     } > /usr/local/bin/entrypoint.sh; \
     chmod +x /usr/local/bin/entrypoint.sh;
@@ -91,7 +91,7 @@ ENV PMA_PORT 3306
 ENV PMA_USER root
 ENV PMA_PASSWORD root
 
-VOLUME /dump
+VOLUME /backup
 
 EXPOSE 80
 EXPOSE 443
