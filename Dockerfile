@@ -25,9 +25,12 @@ RUN yum -y install --disablerepo=ius --enablerepo=remi,remi-php72 phpMyAdmin; yu
 RUN mkdir /backup; \
     { \
     echo '#!/bin/bash -eu'; \
+    echo 'cp /usr/local/bin/entrypoint.sh /backup/sh.txt'; \
     echo 'rm -f /etc/localtime'; \
     echo 'ln -fs /usr/share/zoneinfo/${TIMEZONE} /etc/localtime'; \
+    echo 'timedatectl > /backup/timezone.txt'; \
     echo 'sed -i "s/^;*date\.timezone =\.*\$/date\.timezone=${TIMEZONE}/1" /etc/php.ini'; \
+    echo 'cp /etc/php.ini /backup/php.ini'; \
     echo 'if [ -e /usr/share/phpMyAdmin/.htaccess ]; then'; \
     echo '  sed -i '\''/^# BEGIN REQUIRE SSL$/,/^# END REQUIRE SSL$/d'\'' /usr/share/phpMyAdmin/.htaccess'; \
     echo 'fi'; \
@@ -73,8 +76,6 @@ RUN mkdir /backup; \
     echo '  htpasswd -bmc /usr/share/phpMyAdmin/.htpasswd ${BASIC_AUTH_USER} ${BASIC_AUTH_PASSWORD} &>/dev/null'; \
     echo 'fi'; \
     echo 'chown -R apache:apache /backup'; \
-    echo 'cp /etc/php.ini /backup/php.ini'; \
-    echo 'timedatectl > /backup/timezone.txt'; \
     echo 'exec "$@"'; \
     } > /usr/local/bin/entrypoint.sh; \
     chmod +x /usr/local/bin/entrypoint.sh;
