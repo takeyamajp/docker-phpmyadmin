@@ -29,7 +29,7 @@ RUN mkdir /backup; \
     echo 'rm -f /etc/localtime'; \
     echo 'ln -fs /usr/share/zoneinfo/${TIMEZONE} /etc/localtime'; \
     echo 'ESC_TIMEZONE=`echo ${TIMEZONE} | sed "s/\//\\\\\\\\\//g"`'; \
-    echo 'sed -i "s/^;?date\.timezone =.*\$/date\.timezone=${ESC_TIMEZONE}/1" /etc/php.ini'; \
+    echo 'sed -i "s/^;*date\.timezone =.*\$/date\.timezone=${ESC_TIMEZONE}/1" /etc/php.ini'; \
     echo 'cp /etc/php.ini /backup/php.ini'; \
     echo 'if [ -e /usr/share/phpMyAdmin/.htaccess ]; then'; \
     echo '  sed -i '\''/^# BEGIN REQUIRE SSL$/,/^# END REQUIRE SSL$/d'\'' /usr/share/phpMyAdmin/.htaccess'; \
