@@ -1,10 +1,6 @@
 FROM centos:centos7
 MAINTAINER "Hiroki Takeyama"
 
-# timezone
-RUN rm -f /etc/localtime; \
-    ln -fs /usr/share/zoneinfo/Asia/Tokyo /etc/localtime;
-
 # httpd (ius for CentOS7)
 RUN yum -y install system-logos openssl mailcap; yum clean all; \
     yum -y install "https://centos7.iuscommunity.org/ius-release.rpm"; yum clean all; \
@@ -19,8 +15,7 @@ RUN echo 'ServerName ${HOSTNAME}' >> /etc/httpd/conf.d/additional.conf;
 # PHP (remi for CentOS7)
 RUN yum -y install epel-release; yum clean all; \
     rpm -Uvh http://rpms.famillecollet.com/enterprise/remi-release-7.rpm; \
-    yum -y install --disablerepo=ius --enablerepo=remi,remi-php72 php php-mbstring php-curl php-mysqlnd php-opcache php-pecl-apcu; yum clean all; \
-    sed -i 's/^;date\.timezone =$/date\.timezone=Asia\/Tokyo/1' /etc/php.ini;
+    yum -y install --disablerepo=ius --enablerepo=remi,remi-php72 php php-mbstring php-curl php-mysqlnd php-opcache php-pecl-apcu; yum clean all;
 
 # phpMyAdmin
 RUN yum -y install --disablerepo=ius --enablerepo=remi,remi-php72 phpMyAdmin; yum clean all; \
@@ -30,6 +25,9 @@ RUN yum -y install --disablerepo=ius --enablerepo=remi,remi-php72 phpMyAdmin; yu
 RUN mkdir /backup; \
     { \
     echo '#!/bin/bash -eu'; \
+    echo 'rm -f /etc/localtime'; \
+    echo 'ln -fs /usr/share/zoneinfo/${TIMEZONE} /etc/localtime'; \
+    echo 'sed -i "s/^;*date\.timezone =\.*\$/date\.timezone=${TIMEZONE}/1" /etc/php.ini'; \
     echo 'if [ -e /usr/share/phpMyAdmin/.htaccess ]; then'; \
     echo '  sed -i '\''/^# BEGIN REQUIRE SSL$/,/^# END REQUIRE SSL$/d'\'' /usr/share/phpMyAdmin/.htaccess'; \
     echo 'fi'; \
@@ -75,10 +73,14 @@ RUN mkdir /backup; \
     echo '  htpasswd -bmc /usr/share/phpMyAdmin/.htpasswd ${BASIC_AUTH_USER} ${BASIC_AUTH_PASSWORD} &>/dev/null'; \
     echo 'fi'; \
     echo 'chown -R apache:apache /backup'; \
+    echo 'cp /etc/php.ini /backup/php.ini'; \
+    echo 'timedatectl > /backup/timezone.txt'; \
     echo 'exec "$@"'; \
     } > /usr/local/bin/entrypoint.sh; \
     chmod +x /usr/local/bin/entrypoint.sh;
 ENTRYPOINT ["entrypoint.sh"]
+
+ENV TIMEZONE Asia/Tokyo
 
 ENV REQUIRE_SSL true
 
