@@ -29,9 +29,7 @@ RUN mkdir /backup; \
     echo 'ln -fs /usr/share/zoneinfo/${TIMEZONE} /etc/localtime'; \
     echo 'ESC_TIMEZONE=`echo ${TIMEZONE} | sed "s/\//\\\\\\\\\//g"`'; \
     echo 'sed -i "s/^;*date\.timezone =.*\$/date\.timezone =${ESC_TIMEZONE}/1" /etc/php.ini'; \
-    echo 'if [ -e /usr/share/phpMyAdmin/.htaccess ]; then'; \
-    echo '  sed -i '\''/^# BEGIN REQUIRE SSL$/,/^# END REQUIRE SSL$/d'\'' /usr/share/phpMyAdmin/.htaccess'; \
-    echo 'fi'; \
+    echo 'sed -i '\''/^# BEGIN REQUIRE SSL$/,/^# END REQUIRE SSL$/d'\'' /usr/share/phpMyAdmin/.htaccess'; \
     echo 'if [ ${REQUIRE_SSL,,} = "true" ]; then'; \
     echo '  {'; \
     echo '  echo "# BEGIN REQUIRE SSL"'; \
@@ -44,6 +42,19 @@ RUN mkdir /backup; \
     echo '  echo "# END REQUIRE SSL"'; \
     echo '  } >> /usr/share/phpMyAdmin/.htaccess'; \
     echo 'fi'; \
+    echo 'sed -i '\''/^# BEGIN ENABLE GZIP COMPRESSION$/,/^# END ENABLE GZIP COMPRESSION$/d'\'' /usr/share/phpMyAdmin/.htaccess'; \
+    echo 'if [ ${ENABLE_GZIP_COMPRESSION,,} = "true" ]; then'; \
+    echo '  {'; \
+    echo '  echo "# BEGIN ENABLE GZIP COMPRESSION"'; \
+    echo '  echo "<IfModule mod_deflate.c>"'; \
+    echo '  echo "<IfModule mod_filter.c>"'; \
+    echo '  echo "  SetOutputFilter DEFLATE"'; \
+    echo '  echo "  SetEnvIfNoCase Request_URI \.(?:gif|jpe?g|png)$ no-gzip dont-vary"'; \
+    echo '  echo "</IfModule>"'; \
+    echo '  echo "</IfModule>"'; \
+    echo '  echo "# END ENABLE GZIP COMPRESSION"'; \
+    echo '  } >> /usr/share/phpMyAdmin/.htaccess'; \
+    echo 'fi'; \ 
     echo 'sed -i '\''/^# BEGIN DB SETTINGS$/,/^# END DB SETTINGS$/d'\'' /etc/phpMyAdmin/config.inc.php'; \
     echo '{'; \
     echo 'echo "# BEGIN DB SETTINGS"'; \
@@ -82,6 +93,7 @@ ENTRYPOINT ["entrypoint.sh"]
 ENV TIMEZONE Asia/Tokyo
 
 ENV REQUIRE_SSL true
+ENV ENABLE_GZIP_COMPRESSION true
 
 ENV REQUIRE_BASIC_AUTH false
 ENV BASIC_AUTH_USER user
