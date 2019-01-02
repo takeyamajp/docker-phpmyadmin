@@ -1,7 +1,7 @@
 # phpmyadmin
 [![Docker Stars](https://img.shields.io/docker/stars/takeyamajp/phpmyadmin.svg?style=flat-square)](https://hub.docker.com/r/takeyamajp/phpmyadmin/)
 [![Docker Pulls](https://img.shields.io/docker/pulls/takeyamajp/phpmyadmin.svg?style=flat-square)](https://hub.docker.com/r/takeyamajp/phpmyadmin/)
-[![license](https://img.shields.io/github/license/u6k/plantuml-image-generator.svg)](https://github.com/u6k/plantuml-image-generator/blob/master/LICENSE)
+[![license](https://img.shields.io/github/license/takeyamajp/docker-phpmyadmin.svg)](https://github.com/takeyamajp/docker-phpmyadmin/blob/master/LICENSE)
 
 FROM centos:centos7  
 MAINTAINER "Hiroki Takeyama"
