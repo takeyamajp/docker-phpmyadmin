@@ -1,3 +1,6 @@
+[![Docker Stars](https://img.shields.io/docker/stars/takeyamajp/phpmyadmin.svg?style=flat-square)](https://hub.docker.com/r/takeyamajp/phpmyadmin/)
+[![Docker Pulls](https://img.shields.io/docker/pulls/takeyamajp/phpmyadmin.svg?style=flat-square)](https://hub.docker.com/r/takeyamajp/phpmyadmin/)
+
 FROM centos:centos7  
 MAINTAINER "Hiroki Takeyama"
 
