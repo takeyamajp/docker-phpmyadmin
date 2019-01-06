@@ -10,6 +10,9 @@ RUN yum -y install system-logos openssl mailcap; \
     sed -i 's/<Directory "\/var\/www\/html">/<Directory "\/usr\/share\/phpMyAdmin">"/1' /etc/httpd/conf/httpd.conf; \
     sed -i 's/^\s*CustomLog .*/CustomLog \/dev\/stdout "%{X-Forwarded-For}i %h %l %u %t \\"%r\\" %>s %b \\"%{Referer}i\\" \\"%{User-Agent}i\\" %I %O"/1' /etc/httpd/conf/httpd.conf; \
     sed -i 's/^ErrorLog .*/ErrorLog \/dev\/stderr/1' /etc/httpd/conf/httpd.conf; \
+    sed -i 's/^\s*"%t %h %{SSL_PROTOCOL}x %{SSL_CIPHER}x \\"%r\\" %b"//1' /etc/httpd/conf.d/ssl.conf; \
+    sed -i 's/^\s*CustomLog .*/CustomLog \/dev\/stdout "%{X-Forwarded-For}i %h %l %u %t \\"%r\\" %>s %b \\"%{Referer}i\\" \\"%{User-Agent}i\\" %I %O"/1' /etc/httpd/conf.d/ssl.conf; \
+    sed -i 's/^ErrorLog .*/ErrorLog \/dev\/stderr/1' /etc/httpd/conf.d/ssl.conf; \
     yum clean all;
 
 # prevent error AH00558 on stdout
@@ -35,6 +38,7 @@ RUN mkdir /backup; \
     echo 'ESC_TIMEZONE=`echo ${TIMEZONE} | sed "s/\//\\\\\\\\\//g"`'; \
     echo 'sed -i "s/^;*date\.timezone =.*/date\.timezone =${ESC_TIMEZONE}/1" /etc/php.ini'; \
     echo 'sed -i "s/^LogLevel .*/LogLevel ${HTTPD_LOG_LEVEL}/1" /etc/httpd/conf/httpd.conf'; \
+    echo 'sed -i "s/^LogLevel .*/LogLevel ${HTTPD_LOG_LEVEL}/1" /etc/httpd/conf.d/ssl.conf'; \
     echo 'if [ -e /usr/share/phpMyAdmin/.htaccess ]; then'; \
     echo '  sed -i '\''/^# BEGIN REQUIRE SSL$/,/^# END REQUIRE SSL$/d'\'' /usr/share/phpMyAdmin/.htaccess'; \
     echo '  sed -i '\''/^# BEGIN ENABLE GZIP COMPRESSION$/,/^# END ENABLE GZIP COMPRESSION$/d'\'' /usr/share/phpMyAdmin/.htaccess'; \
