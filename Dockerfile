@@ -29,7 +29,6 @@ RUN yum -y install --disablerepo=ius --enablerepo=remi,remi-php72 phpMyAdmin; \
 RUN mkdir /backup; \
     { \
     echo '#!/bin/bash -eu'; \
-    echo 'cp /usr/local/bin/entrypoint.sh /backup/entrypoint.sh'; \
     echo 'rm -f /etc/localtime'; \
     echo 'ln -fs /usr/share/zoneinfo/${TIMEZONE} /etc/localtime'; \
     echo 'ESC_TIMEZONE=`echo ${TIMEZONE} | sed "s/\//\\\\\\\\\//g"`'; \
@@ -93,6 +92,8 @@ RUN mkdir /backup; \
     echo '  htpasswd -bmc /usr/share/phpMyAdmin/.htpasswd ${BASIC_AUTH_USER} ${BASIC_AUTH_PASSWORD} &>/dev/null'; \
     echo 'fi'; \
     echo 'chown -R apache:apache /backup'; \
+    echo 'cp /usr/local/bin/entrypoint.sh /backup/entrypoint.sh'; \
+    echo 'cp /etc/httpd/conf/httpd.conf /backup/httpd.conf'; \
     echo 'exec "$@"'; \
     } > /usr/local/bin/entrypoint.sh; \
     chmod +x /usr/local/bin/entrypoint.sh;
