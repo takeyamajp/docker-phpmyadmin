@@ -29,6 +29,7 @@ RUN yum -y install --disablerepo=ius --enablerepo=remi,remi-php72 phpMyAdmin; \
 RUN mkdir /backup; \
     { \
     echo '#!/bin/bash -eu'; \
+    echo 'cp /usr/local/bin/entrypoint.sh /backup/entrypoint.sh'; \
     echo 'rm -f /etc/localtime'; \
     echo 'ln -fs /usr/share/zoneinfo/${TIMEZONE} /etc/localtime'; \
     echo 'ESC_TIMEZONE=`echo ${TIMEZONE} | sed "s/\//\\\\\\\\\//g"`'; \
