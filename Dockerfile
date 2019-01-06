@@ -34,7 +34,7 @@ RUN mkdir /backup; \
     echo 'ln -fs /usr/share/zoneinfo/${TIMEZONE} /etc/localtime'; \
     echo 'ESC_TIMEZONE=`echo ${TIMEZONE} | sed "s/\//\\\\\\\\\//g"`'; \
     echo 'sed -i "s/^;*date\.timezone =.*/date\.timezone =${ESC_TIMEZONE}/1" /etc/php.ini'; \
-    echo 'sed -i '\''s/^\s*CustomLog .*/CustomLog \/dev\/stdout "%{X-Forwarded-For}i %a %h %l %u %t \"%r\" %>s %b \"%{Referer}i\" \"%{User-Agent}i\" %I %O"'\'' /etc/httpd/conf/httpd.conf'; \
+    echo 'sed -i '\''s/^\s*CustomLog .*/CustomLog \/dev\/stdout "%{X-Forwarded-For}i %a %h %l %u %t \"%r\" %>s %b \"%{Referer}i\" \"%{User-Agent}i\" %I %O"/1'\'' /etc/httpd/conf/httpd.conf'; \
     echo 'if [ -e /usr/share/phpMyAdmin/.htaccess ]; then'; \
     echo '  sed -i '\''/^# BEGIN REQUIRE SSL$/,/^# END REQUIRE SSL$/d'\'' /usr/share/phpMyAdmin/.htaccess'; \
     echo '  sed -i '\''/^# BEGIN ENABLE GZIP COMPRESSION$/,/^# END ENABLE GZIP COMPRESSION$/d'\'' /usr/share/phpMyAdmin/.htaccess'; \
