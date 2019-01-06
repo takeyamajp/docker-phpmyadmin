@@ -22,7 +22,7 @@
     ENV PMA_USER root  
     ENV PMA_PASSWORD root
     
-    VOLUME /backup
+    VOLUME /export
     
     EXPOSE 80  
     EXPOSE 443
