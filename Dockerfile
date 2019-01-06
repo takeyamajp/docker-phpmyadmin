@@ -30,7 +30,7 @@ RUN yum -y install --disablerepo=ius --enablerepo=remi,remi-php72 phpMyAdmin; \
     yum clean all;
 
 # entrypoint
-RUN mkdir /backup; \
+RUN mkdir /export; \
     { \
     echo '#!/bin/bash -eu'; \
     echo 'rm -f /etc/localtime'; \
@@ -75,8 +75,8 @@ RUN mkdir /backup; \
     echo 'echo "\$cfg['\''Servers'\''][\$i]['\''port'\''] = '\''${PMA_PORT}'\'';"'; \
     echo 'echo "\$cfg['\''Servers'\''][\$i]['\''user'\''] = '\''${PMA_USER}'\'';"'; \
     echo 'echo "\$cfg['\''Servers'\''][\$i]['\''password'\''] = '\''${PMA_PASSWORD}'\'';"'; \
-    echo 'echo "\$cfg['\''UploadDir'\''] = '\''/backup'\'';"'; \
-    echo 'echo "\$cfg['\''SaveDir'\''] = '\''/backup'\'';"'; \
+    echo 'echo "\$cfg['\''UploadDir'\''] = '\''/export'\'';"'; \
+    echo 'echo "\$cfg['\''SaveDir'\''] = '\''/export'\'';"'; \
     echo 'echo "# END DB SETTINGS"'; \
     echo '} >> /etc/phpMyAdmin/config.inc.php'; \
     echo 'if [ -e /usr/share/phpMyAdmin/.htpasswd ]; then'; \
@@ -96,7 +96,7 @@ RUN mkdir /backup; \
     echo '  } >> /etc/httpd/conf.d/phpMyAdmin.conf'; \
     echo '  htpasswd -bmc /usr/share/phpMyAdmin/.htpasswd ${BASIC_AUTH_USER} ${BASIC_AUTH_PASSWORD} &>/dev/null'; \
     echo 'fi'; \
-    echo 'chown -R apache:apache /backup'; \
+    echo 'chown -R apache:apache /export'; \
     echo 'exec "$@"'; \
     } > /usr/local/bin/entrypoint.sh; \
     chmod +x /usr/local/bin/entrypoint.sh;
@@ -118,7 +118,7 @@ ENV PMA_PORT 3306
 ENV PMA_USER root
 ENV PMA_PASSWORD root
 
-VOLUME /backup
+VOLUME /export
 
 EXPOSE 80
 EXPOSE 443
