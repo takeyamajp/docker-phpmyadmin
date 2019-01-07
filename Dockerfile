@@ -39,6 +39,16 @@ RUN mkdir /export; \
     echo 'sed -i "s/^;*date\.timezone =.*/date\.timezone =${ESC_TIMEZONE}/1" /etc/php.ini'; \
     echo 'sed -i "s/^LogLevel .*/LogLevel ${HTTPD_LOG_LEVEL}/1" /etc/httpd/conf/httpd.conf'; \
     echo 'sed -i "s/^LogLevel .*/LogLevel ${HTTPD_LOG_LEVEL}/1" /etc/httpd/conf.d/ssl.conf'; \
+    echo 'sed -i "s/^(CustomLog .*)/#\1/1" /etc/httpd/conf/httpd.conf'; \
+    echo 'sed -i "s/^(ErrorLog .*)/#\1/1" /etc/httpd/conf/httpd.conf'; \
+    echo 'sed -i "s/^(CustomLog .*)/#\1/1" /etc/httpd/conf.d/ssl.conf'; \
+    echo 'sed -i "s/^(ErrorLog .*)/#\1/1" /etc/httpd/conf.d/ssl.conf'; \
+    echo 'if [ ${HTTPD_LOGGING,,} = "true" ]; then'; \
+    echo '  sed -i "s/^#(CustomLog .*)/\1/1" /etc/httpd/conf/httpd.conf'; \
+    echo '  sed -i "s/^#(ErrorLog .*)/\1/1" /etc/httpd/conf/httpd.conf'; \
+    echo '  sed -i "s/^#(CustomLog .*)/\1/1" /etc/httpd/conf.d/ssl.conf'; \
+    echo '  sed -i "s/^#(ErrorLog .*)/\1/1" /etc/httpd/conf.d/ssl.conf'; \
+    echo 'fi'; \
     echo 'if [ -e /usr/share/phpMyAdmin/.htaccess ]; then'; \
     echo '  sed -i '\''/^# BEGIN REQUIRE SSL$/,/^# END REQUIRE SSL$/d'\'' /usr/share/phpMyAdmin/.htaccess'; \
     echo '  sed -i '\''/^# BEGIN ENABLE GZIP COMPRESSION$/,/^# END ENABLE GZIP COMPRESSION$/d'\'' /usr/share/phpMyAdmin/.htaccess'; \
@@ -111,6 +121,7 @@ ENV REQUIRE_BASIC_AUTH false
 ENV BASIC_AUTH_USER user
 ENV BASIC_AUTH_PASSWORD user
 
+ENV HTTPD_LOGGING true
 ENV HTTPD_LOG_LEVEL warn
 
 ENV PMA_HOST mysql
