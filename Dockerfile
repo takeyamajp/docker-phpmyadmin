@@ -16,6 +16,7 @@ RUN yum -y install system-logos openssl mailcap; \
     sed -i 's/^\(LoadModule mpm_prefork_module .*\)/#\1/1' /etc/httpd/conf.modules.d/00-mpm.conf; \
     sed -i 's/^#\(LoadModule mpm_event_module .*\)/\1/1' /etc/httpd/conf.modules.d/00-mpm.conf; \
     rm -f /etc/httpd/conf.modules.d/00-proxy.conf; \
+    rm -f /usr/sbin/suexec; \
     yum clean all;
 
 # prevent error AH00558 on stdout
