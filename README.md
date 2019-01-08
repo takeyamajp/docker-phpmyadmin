@@ -1,6 +1,7 @@
 # phpmyadmin
 [![Docker Stars](https://img.shields.io/docker/stars/takeyamajp/phpmyadmin.svg)](https://hub.docker.com/r/takeyamajp/phpmyadmin/)
 [![Docker Pulls](https://img.shields.io/docker/pulls/takeyamajp/phpmyadmin.svg)](https://hub.docker.com/r/takeyamajp/phpmyadmin/)
+[![](https://img.shields.io/badge/GitHub-Dockerfile-green.svg)](https://github.com/takeyamajp/docker-phpmyadmin/blob/master/Dockerfile)
 [![license](https://img.shields.io/github/license/takeyamajp/docker-phpmyadmin.svg)](https://github.com/takeyamajp/docker-phpmyadmin/blob/master/LICENSE)
 
     FROM centos:centos7  
