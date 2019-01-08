@@ -50,6 +50,10 @@ RUN mkdir /export; \
     echo '  sed -i "s/^#\(CustomLog .*\)/\1/1" /etc/httpd/conf.d/ssl.conf'; \
     echo '  sed -i "s/^#\(ErrorLog .*\)/\1/1" /etc/httpd/conf.d/ssl.conf'; \
     echo 'fi'; \
+    echo 'sed -i "s/^log_errors .*/log_errors = Off/1" /etc/php.ini'; \
+    echo 'if [ ${PHP_ERROR_LOGGING,,} = "true" ]; then'; \
+    echo '  sed -i "s/^log_errors .*/log_errors = On/1" /etc/php.ini'; \
+    echo 'fi'; \
     echo 'if [ -e /usr/share/phpMyAdmin/.htaccess ]; then'; \
     echo '  sed -i '\''/^# BEGIN REQUIRE SSL$/,/^# END REQUIRE SSL$/d'\'' /usr/share/phpMyAdmin/.htaccess'; \
     echo '  sed -i '\''/^# BEGIN ENABLE GZIP COMPRESSION$/,/^# END ENABLE GZIP COMPRESSION$/d'\'' /usr/share/phpMyAdmin/.htaccess'; \
@@ -124,6 +128,8 @@ ENV BASIC_AUTH_PASSWORD user
 
 ENV HTTPD_LOGGING true
 ENV HTTPD_LOG_LEVEL warn
+
+ENV PHP_ERROR_LOGGING true
 
 ENV PMA_HOST mysql
 ENV PMA_PORT 3306
