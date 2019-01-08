@@ -18,6 +18,8 @@
     ENV HTTPD_LOGGING true  
     ENV HTTPD_LOG_LEVEL warn
     
+    ENV PHP_ERROR_LOGGING true
+    
     ENV PMA_HOST mysql  
     ENV PMA_PORT 3306  
     ENV PMA_USER root  
