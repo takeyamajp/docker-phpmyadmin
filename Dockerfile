@@ -26,13 +26,13 @@ RUN yum -y install epel-release; \
     yum clean all;
 
 # phpMyAdmin
-RUN yum -y install --disablerepo=ius --enablerepo=remi,remi-php72 phpMyAdmin; \
+RUN mkdir /export; \
+    yum -y install --disablerepo=ius --enablerepo=remi,remi-php72 phpMyAdmin; \
     sed -i '/^<Directory \/usr\/share\/phpMyAdmin\/>$/,/^<Directory \/usr\/share\/phpMyAdmin\/setup\/>$/ s/Require local/Require all granted/1' /etc/httpd/conf.d/phpMyAdmin.conf; \
     yum clean all;
 
 # entrypoint
-RUN mkdir /export; \
-    { \
+RUN { \
     echo '#!/bin/bash -eu'; \
     echo 'rm -f /etc/localtime'; \
     echo 'ln -fs /usr/share/zoneinfo/${TIMEZONE} /etc/localtime'; \
