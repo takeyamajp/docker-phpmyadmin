@@ -98,7 +98,7 @@ RUN { \
     echo '  sed -i '\''/^# BEGIN BASIC AUTH$/,/^# END BASIC AUTH$/d'\'' /etc/httpd/conf.d/phpMyAdmin.conf'; \
     echo '  rm -f /usr/share/phpMyAdmin/.htpasswd'; \
     echo 'fi'; \
-    echo 'if [ ${REQUIRE_BASIC_AUTH,,} = "true" ]; then'; \
+    echo 'if [ ${BASIC_AUTH,,} = "true" ]; then'; \
     echo '  {'; \
     echo '  echo "# BEGIN BASIC AUTH"'; \
     echo '  echo "<Directory /usr/share/phpMyAdmin/>"'; \
@@ -122,7 +122,7 @@ ENV TIMEZONE Asia/Tokyo
 ENV REQUIRE_SSL true
 ENV GZIP_COMPRESSION true
 
-ENV REQUIRE_BASIC_AUTH false
+ENV BASIC_AUTH false
 ENV BASIC_AUTH_USER user
 ENV BASIC_AUTH_PASSWORD user
 
