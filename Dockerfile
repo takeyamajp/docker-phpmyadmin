@@ -28,7 +28,7 @@ RUN yum -y install epel-release; \
 # phpMyAdmin
 RUN mkdir /export; \
     yum -y install --disablerepo=ius --enablerepo=remi,remi-php72 phpMyAdmin; \
-    sed -i '/^<Directory \/usr\/share\/phpMyAdmin\/>$/,/^<Directory \/usr\/share\/phpMyAdmin\/setup\/>$/ s/Require local/Require all granted/1' /etc/httpd/conf.d/phpMyAdmin.conf; \
+    sed -i '/^<Directory \/usr\/share\/phpMyAdmin\/>$/,/^<Directory \/usr\/share\/phpMyAdmin\/setup\/>$/ s/\(Require\) local/\1 all granted/1' /etc/httpd/conf.d/phpMyAdmin.conf; \
     yum clean all;
 
 # entrypoint
