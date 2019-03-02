@@ -10,7 +10,7 @@ RUN mkdir /cert; \
     yum clean all;
 
 # httpd (ius for CentOS7)
-RUN yum -y install system-logos openssl mailcap; \
+RUN yum -y install system-logos mailcap; \
     yum -y install "https://centos7.iuscommunity.org/ius-release.rpm"; \
     yum -y install --disablerepo=base,extras,updates --enablerepo=ius httpd mod_ssl; \
     sed -i 's/^#\(ServerName\) .*/\1 ${HOSTNAME}/' /etc/httpd/conf/httpd.conf; \
