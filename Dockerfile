@@ -55,6 +55,9 @@ RUN { \
     echo '  sed -i "s/^\(SSLCertificateFile\) .*/\1 \/export\/cert.pem/" /etc/httpd/conf.d/ssl.conf'; \
     echo '  sed -i "s/^\(SSLCertificateKeyFile\) .*/\1 \/export\/key.pem/" /etc/httpd/conf.d/ssl.conf'; \
     echo 'fi'; \
+    echo 'if [ -n "${HTTPD_SERVER_ADMIN}" ]; then'; \
+    echo 'sed -i "s/^\(ServerAdmin\) .*/\1 ${HTTPD_SERVER_ADMIN}/" /etc/httpd/conf/httpd.conf'; \
+    echo 'fi'; \
     echo 'sed -i "s/^\(LogLevel\) .*/\1 ${HTTPD_LOG_LEVEL}/" /etc/httpd/conf/httpd.conf'; \
     echo 'sed -i "s/^\(LogLevel\) .*/\1 ${HTTPD_LOG_LEVEL}/" /etc/httpd/conf.d/ssl.conf'; \
     echo 'sed -i "s/^\(CustomLog .*\)/#\1/" /etc/httpd/conf/httpd.conf'; \
@@ -143,6 +146,7 @@ ENV BASIC_AUTH false
 ENV BASIC_AUTH_USER user
 ENV BASIC_AUTH_PASSWORD user
 
+ENV HTTPD_SERVER_ADMIN root@localhost
 ENV HTTPD_LOG true
 ENV HTTPD_LOG_LEVEL warn
 ENV HTTPD_PHP_ERROR_LOG true
