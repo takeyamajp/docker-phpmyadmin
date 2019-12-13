@@ -10,7 +10,7 @@ RUN mkdir /cert; \
     dnf clean all;
 
 # httpd
-RUN dnf -y module install httpd; \
+RUN dnf -y install httpd mod_ssl; \
     sed -i 's/^#\(ServerName\) .*/\1 ${HOSTNAME}/' /etc/httpd/conf/httpd.conf; \
     sed -i 's/\(DocumentRoot\) "\/var\/www\/html"/\1 "\/usr\/share\/phpMyAdmin"/' /etc/httpd/conf/httpd.conf; \
     sed -i '/^<Directory "\/var\/www\/html">$/,/^<IfModule dir_module>$/ s/\(AllowOverride\) None/\1 All/' /etc/httpd/conf/httpd.conf; \
@@ -27,7 +27,8 @@ RUN dnf -y module install httpd; \
 # PHP (remi for CentOS7)
 RUN dnf -y install https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm; \
     dnf -y install https://rpms.remirepo.net/enterprise/remi-release-8.rpm; \
-    dnf -y module install php:remi-7.4; \
+    dnf module enable php:remi-7.4; \
+    dnf -y install php php-mbstring php-curl php-mysqlnd php-opcache php-pecl-apcu; \
     sed -i 's/^;\(error_log\) .*/\1 = \/dev\/stderr/' /etc/php.ini; \
     dnf clean all;
 
