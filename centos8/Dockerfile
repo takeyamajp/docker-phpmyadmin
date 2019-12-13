@@ -31,7 +31,7 @@ RUN yum -y install php php-mbstring php-curl php-mysqlnd php-opcache php-pecl-ap
 
 # phpMyAdmin
 RUN mkdir /export; \
-    yum -y install --disablerepo=ius --enablerepo=remi,remi-php72 phpMyAdmin; \
+    yum -y install phpMyAdmin; \
     sed -i '/^<Directory \/usr\/share\/phpMyAdmin\/>$/,/^<Directory \/usr\/share\/phpMyAdmin\/setup\/>$/ s/\(Require\) local/\1 all granted/' /etc/httpd/conf.d/phpMyAdmin.conf; \
     yum clean all;
 
