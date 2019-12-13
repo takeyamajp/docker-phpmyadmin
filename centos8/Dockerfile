@@ -3,14 +3,14 @@ MAINTAINER "Hiroki Takeyama"
 
 # certificate
 RUN mkdir /cert; \
-    yum -y install openssl; \
+    dnf -y install openssl; \
     openssl genrsa -aes128 -passout pass:dummy -out "/cert/key.pass.pem" 2048; \
     openssl rsa -passin pass:dummy -in "/cert/key.pass.pem" -out "/cert/key.pem"; \
     rm -f /cert/key.pass.pem; \
-    yum clean all;
+    dnf clean all;
 
 # httpd
-RUN yum -y install httpd mod_ssl; \
+RUN dnf -y install httpd mod_ssl; \
     sed -i 's/^#\(ServerName\) .*/\1 ${HOSTNAME}/' /etc/httpd/conf/httpd.conf; \
     sed -i 's/\(DocumentRoot\) "\/var\/www\/html"/\1 "\/usr\/share\/phpMyAdmin"/' /etc/httpd/conf/httpd.conf; \
     sed -i '/^<Directory "\/var\/www\/html">$/,/^<IfModule dir_module>$/ s/\(AllowOverride\) None/\1 All/' /etc/httpd/conf/httpd.conf; \
@@ -22,20 +22,20 @@ RUN yum -y install httpd mod_ssl; \
     sed -i 's/^\s*"%t %h %{SSL_PROTOCOL}x %{SSL_CIPHER}x \\"%r\\" %b"//' /etc/httpd/conf.d/ssl.conf; \
     sed -i 's/^\(LoadModule lbmethod_heartbeat_module .*\)/#\1/' /etc/httpd/conf.modules.d/00-proxy.conf; \
     rm -f /usr/sbin/suexec; \
-    yum clean all;
+    dnf clean all;
 
 # PHP (remi for CentOS7)
-RUN yum -y install epel-release; \
-    rpm -Uvh http://rpms.famillecollet.com/enterprise/remi-release-8.rpm; \
-    yum -y install --enablerepo=remi,remi-php74 php php-mbstring php-curl php-mysqlnd php-opcache php-pecl-apcu; \
+RUN dnf -y install https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm; \
+    dnf -y install https://rpms.remirepo.net/enterprise/remi-release-8.rpm; \
+    dnf -y install --enablerepo=remi php74 php-mbstring php-curl php-mysqlnd php-opcache php-pecl-apcu; \
     sed -i 's/^;\(error_log\) .*/\1 = \/dev\/stderr/' /etc/php.ini; \
-    yum clean all;
+    dnf clean all;
 
 # phpMyAdmin
 RUN mkdir /export; \
-    yum -y install --enablerepo=remi,remi-php74 phpMyAdmin; \
+    dnf -y install --enablerepo=remi phpMyAdmin; \
     sed -i '/^<Directory \/usr\/share\/phpMyAdmin\/>$/,/^<Directory \/usr\/share\/phpMyAdmin\/setup\/>$/ s/\(Require\) local/\1 all granted/' /etc/httpd/conf.d/phpMyAdmin.conf; \
-    yum clean all;
+    dnf clean all;
 
 # entrypoint
 RUN { \
