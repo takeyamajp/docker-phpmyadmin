@@ -27,7 +27,7 @@ RUN dnf -y install httpd mod_ssl; \
 # PHP (remi)
 RUN dnf -y install https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm; \
     dnf -y install https://rpms.remirepo.net/enterprise/remi-release-8.rpm; \
-    dnf module enable php:remi-7.4; \
+    dnf -y module enable php:remi-7.4; \
     dnf -y install php php-mbstring php-curl php-mysqlnd php-opcache php-pecl-apcu; \
     sed -i 's/^;\(error_log\) .*/\1 = \/dev\/stderr/' /etc/php.ini; \
     dnf clean all;
