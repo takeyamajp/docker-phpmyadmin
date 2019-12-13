@@ -24,7 +24,7 @@ RUN dnf -y install httpd mod_ssl; \
     rm -f /usr/sbin/suexec; \
     dnf clean all;
 
-# PHP (remi for CentOS7)
+# PHP (remi)
 RUN dnf -y install https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm; \
     dnf -y install https://rpms.remirepo.net/enterprise/remi-release-8.rpm; \
     dnf module enable php:remi-7.4; \
@@ -32,7 +32,7 @@ RUN dnf -y install https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.n
     sed -i 's/^;\(error_log\) .*/\1 = \/dev\/stderr/' /etc/php.ini; \
     dnf clean all;
 
-# phpMyAdmin
+# phpMyAdmin (remi)
 RUN mkdir /export; \
     dnf -y install --enablerepo=remi phpMyAdmin; \
     sed -i '/^<Directory \/usr\/share\/phpMyAdmin\/>$/,/^<Directory \/usr\/share\/phpMyAdmin\/setup\/>$/ s/\(Require\) local/\1 all granted/' /etc/httpd/conf.d/phpMyAdmin.conf; \
