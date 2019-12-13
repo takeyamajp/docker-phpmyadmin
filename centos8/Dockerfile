@@ -38,6 +38,30 @@ RUN mkdir /export; \
     sed -i '/^<Directory \/usr\/share\/phpMyAdmin\/>$/,/^<Directory \/usr\/share\/phpMyAdmin\/setup\/>$/ s/\(Require\) local/\1 all granted/' /etc/httpd/conf.d/phpMyAdmin.conf; \
     dnf clean all;
 
+# supervisor
+RUN dnf -y install supervisor; \
+    sed -i 's/^\(nodaemon\)=false/\1=true/' /etc/supervisord.conf; \
+    sed -i 's/^;\(user\)=chrism/\1=root/' /etc/supervisord.conf; \
+    sed -i '/^\[unix_http_server\]$/a username=dummy\npassword=dummy' /etc/supervisord.conf; \
+    sed -i '/^\[supervisorctl\]$/a username=dummy\npassword=dummy' /etc/supervisord.conf; \
+    { \
+    echo '[program:httpd]'; \
+    echo 'command=/usr/sbin/httpd -DFOREGROUND'; \
+    echo 'stdout_logfile=/dev/fd/1'; \
+    echo 'stdout_logfile_maxbytes=0'; \
+    echo 'stderr_logfile=/dev/fd/2'; \
+    echo 'stderr_logfile_maxbytes=0'; \
+    } > /etc/supervisord.d/httpd.ini; \
+    { \
+    echo '[program:php-fpm]'; \
+    echo 'command=/usr/sbin/php-fpm --nodaemonize'; \
+    echo 'stdout_logfile=/dev/fd/1'; \
+    echo 'stdout_logfile_maxbytes=0'; \
+    echo 'stderr_logfile=/dev/fd/2'; \
+    echo 'stderr_logfile_maxbytes=0'; \
+    } > /etc/supervisord.d/php-fpm.ini; \
+    dnf clean all;
+
 # entrypoint
 RUN { \
     echo '#!/bin/bash -eu'; \
@@ -155,4 +179,4 @@ VOLUME /export
 EXPOSE 80
 EXPOSE 443
 
-CMD ["httpd", "-DFOREGROUND"]
+CMD ["supervisord", "-c", "/etc/supervisord.conf"]
