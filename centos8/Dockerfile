@@ -24,14 +24,16 @@ RUN yum -y install httpd mod_ssl; \
     rm -f /usr/sbin/suexec; \
     yum clean all;
 
-# PHP
-RUN yum -y install php php-mbstring php-curl php-mysqlnd php-opcache php-pecl-apcu; \
+# PHP (remi for CentOS7)
+RUN yum -y install epel-release; \
+    rpm -Uvh http://rpms.famillecollet.com/enterprise/remi-release-8.rpm; \
+    yum -y install --enablerepo=remi,remi-php74 php php-mbstring php-curl php-mysqlnd php-opcache php-pecl-apcu; \
     sed -i 's/^;\(error_log\) .*/\1 = \/dev\/stderr/' /etc/php.ini; \
     yum clean all;
 
 # phpMyAdmin
 RUN mkdir /export; \
-    yum -y install phpMyAdmin; \
+    yum -y install --enablerepo=remi,remi-php74 phpMyAdmin; \
     sed -i '/^<Directory \/usr\/share\/phpMyAdmin\/>$/,/^<Directory \/usr\/share\/phpMyAdmin\/setup\/>$/ s/\(Require\) local/\1 all granted/' /etc/httpd/conf.d/phpMyAdmin.conf; \
     yum clean all;
 
