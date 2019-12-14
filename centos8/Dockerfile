@@ -47,6 +47,7 @@ RUN dnf -y install supervisor; \
     { \
     echo '[program:httpd]'; \
     echo 'command=/usr/sbin/httpd -DFOREGROUND'; \
+    echo 'priority=2'; \
     echo 'stdout_logfile=/dev/fd/1'; \
     echo 'stdout_logfile_maxbytes=0'; \
     echo 'stderr_logfile=/dev/fd/2'; \
@@ -55,6 +56,7 @@ RUN dnf -y install supervisor; \
     { \
     echo '[program:php-fpm]'; \
     echo 'command=/usr/sbin/php-fpm --nodaemonize'; \
+    echo 'priority=1'; \
     echo 'stdout_logfile=/dev/fd/1'; \
     echo 'stdout_logfile_maxbytes=0'; \
     echo 'stderr_logfile=/dev/fd/2'; \
