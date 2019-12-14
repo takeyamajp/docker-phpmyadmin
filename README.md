@@ -3,6 +3,10 @@
 [![Docker Pulls](https://img.shields.io/docker/pulls/takeyamajp/phpmyadmin.svg)](https://hub.docker.com/r/takeyamajp/phpmyadmin/)
 [![license](https://img.shields.io/github/license/takeyamajp/docker-phpmyadmin.svg)](https://github.com/takeyamajp/docker-phpmyadmin/blob/master/LICENSE)
 
+### Supported tags and respective Dockerfile links  
+- [`latest`, `centos7`](https://github.com/takeyamajp/docker-phpmyadmin/blob/master/centos7/Dockerfile)
+
+### Image summary
     FROM centos:centos7  
     MAINTAINER "Hiroki Takeyama"
     
