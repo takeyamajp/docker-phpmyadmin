@@ -61,6 +61,7 @@ RUN dnf -y install supervisor; \
     echo 'stderr_logfile=/dev/fd/2'; \
     echo 'stderr_logfile_maxbytes=0'; \
     } > /etc/supervisord.d/php-fpm.ini; \
+    mkdir /run/supervisor; \
     dnf clean all;
 
 # entrypoint
