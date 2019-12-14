@@ -28,7 +28,6 @@ RUN dnf -y install https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.n
     dnf -y module enable php:remi-7.4; \
     dnf -y install php php-mbstring php-curl php-mysqlnd php-opcache php-pecl-apcu; \
     sed -i 's/^;\(error_log\) .*/\1 = \/dev\/stderr/' /etc/php.ini; \
-    sed -i 's/^\(listen.acl_users .*\)/;\1/' /etc/php-fpm.d/www.conf; \
     mkdir /run/php-fpm; \
     dnf clean all;
 
@@ -62,7 +61,6 @@ RUN dnf -y install supervisor; \
     echo 'stderr_logfile=/dev/fd/2'; \
     echo 'stderr_logfile_maxbytes=0'; \
     } > /etc/supervisord.d/php-fpm.ini; \
-    mkdir /run/supervisor; \
     dnf clean all;
 
 # entrypoint
