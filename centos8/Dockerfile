@@ -29,7 +29,7 @@ RUN dnf -y install https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.n
     dnf -y install php php-mbstring php-curl php-mysqlnd php-opcache php-pecl-apcu; \
     sed -i 's/^;\(error_log\) .*/\1 = \/dev\/stderr/' /etc/php.ini; \
     mkdir /run/php-fpm; \
-    chmod 660 /run/php-fpm; \
+    chmod 777 /run/php-fpm; \
     dnf clean all;
 
 # phpMyAdmin (remi)
