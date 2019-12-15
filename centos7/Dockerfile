@@ -34,7 +34,7 @@ RUN yum -y install epel-release; \
     sed -i 's/^;\(error_log\) .*/\1 = \/dev\/stderr/' /etc/php.ini; \
     yum clean all;
 
-# phpMyAdmin
+# phpMyAdmin (remi for CentOS7)
 RUN mkdir /export; \
     yum -y install --disablerepo=ius --enablerepo=remi,remi-php72 phpMyAdmin; \
     sed -i '/^<Directory \/usr\/share\/phpMyAdmin\/>$/,/^<Directory \/usr\/share\/phpMyAdmin\/setup\/>$/ s/\(Require\) local/\1 all granted/' /etc/httpd/conf.d/phpMyAdmin.conf; \
