@@ -20,18 +20,20 @@ RUN dnf -y install httpd mod_ssl; \
     sed -i 's/^\s*\(CustomLog\) .*/\1 \/dev\/stdout "%{X-Forwarded-For}i %h %l %u %t \\"%r\\" %>s %b \\"%{Referer}i\\" \\"%{User-Agent}i\\" %I %O"/' /etc/httpd/conf.d/ssl.conf; \
     sed -i 's/^\(ErrorLog\) .*/\1 \/dev\/stderr/' /etc/httpd/conf.d/ssl.conf; \
     sed -i 's/^\s*"%t %h %{SSL_PROTOCOL}x %{SSL_CIPHER}x \\"%r\\" %b"//' /etc/httpd/conf.d/ssl.conf; \
+    sed -i 's/^\(LoadModule lbmethod_heartbeat_module .*\)/#\1/' /etc/httpd/conf.modules.d/00-proxy.conf; \
+    rm -f /usr/sbin/suexec; \
     dnf clean all;
 
 # PHP (remi)
-RUN dnf -y install https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm; \
+RUN mkdir /run/php-fpm; \
+    dnf -y install https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm; \
     dnf -y install https://rpms.remirepo.net/enterprise/remi-release-8.rpm; \
     dnf -y module enable php:remi-7.4; \
     dnf -y install php php-mbstring php-curl php-mysqlnd php-opcache php-pecl-apcu; \
     sed -i 's/^;\(error_log\) .*/\1 = \/dev\/stderr/' /etc/php.ini; \
-    sed -i 's/^\(listen.acl_users .*\)/;\1/' /etc/php-fpm.d/www.conf; \
     sed -i 's/^;\(listen.owner =\).*/\1 apache/' /etc/php-fpm.d/www.conf; \
     sed -i 's/^;\(listen.group =\).*/\1 apache/' /etc/php-fpm.d/www.conf; \
-    mkdir /run/php-fpm; \
+    sed -i 's/^\(listen.acl_users .*\)/;\1/' /etc/php-fpm.d/www.conf; \
     dnf clean all;
 
 # phpMyAdmin (remi)
@@ -41,7 +43,8 @@ RUN mkdir /export; \
     dnf clean all;
 
 # supervisor
-RUN dnf -y install supervisor; \
+RUN mkdir /run/supervisor; \
+    dnf -y install supervisor; \
     sed -i 's/^\(nodaemon\)=false/\1=true/' /etc/supervisord.conf; \
     sed -i 's/^;\(user\)=chrism/\1=root/' /etc/supervisord.conf; \
     sed -i '/^\[unix_http_server\]$/a username=dummy\npassword=dummy' /etc/supervisord.conf; \
@@ -64,7 +67,6 @@ RUN dnf -y install supervisor; \
     echo 'stderr_logfile=/dev/fd/2'; \
     echo 'stderr_logfile_maxbytes=0'; \
     } > /etc/supervisord.d/php-fpm.ini; \
-    mkdir /run/supervisor; \
     dnf clean all;
 
 # entrypoint
