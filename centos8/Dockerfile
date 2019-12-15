@@ -24,7 +24,7 @@ RUN dnf -y install httpd mod_ssl; \
     rm -f /usr/sbin/suexec; \
     dnf clean all;
 
-# PHP (remi)
+# PHP (remi for CentOS8)
 RUN mkdir /run/php-fpm; \
     dnf -y install https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm; \
     dnf -y install https://rpms.remirepo.net/enterprise/remi-release-8.rpm; \
@@ -36,7 +36,7 @@ RUN mkdir /run/php-fpm; \
     sed -i 's/^\(listen.acl_users .*\)/;\1/' /etc/php-fpm.d/www.conf; \
     dnf clean all;
 
-# phpMyAdmin (remi)
+# phpMyAdmin (remi for CentOS8)
 RUN mkdir /export; \
     dnf -y install --enablerepo=remi phpMyAdmin; \
     sed -i '/^<Directory \/usr\/share\/phpMyAdmin\/>$/,/^<Directory \/usr\/share\/phpMyAdmin\/setup\/>$/ s/\(Require\) local/\1 all granted/' /etc/httpd/conf.d/phpMyAdmin.conf; \
