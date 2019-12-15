@@ -30,7 +30,7 @@ RUN dnf -y install https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.n
     sed -i 's/^;\(error_log\) .*/\1 = \/dev\/stderr/' /etc/php.ini; \
     sed -i 's/^\(listen.acl_users .*\)/;\1/' /etc/php-fpm.d/www.conf; \
     mkdir /run/php-fpm; \
-    chown -R apache:apache /run/php-fpm; \
+    chmod 660 /run/php-fpm; \
     dnf clean all;
 
 # phpMyAdmin (remi)
