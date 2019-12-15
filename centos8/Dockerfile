@@ -29,9 +29,8 @@ RUN dnf -y install https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.n
     dnf -y install php php-mbstring php-curl php-mysqlnd php-opcache php-pecl-apcu; \
     sed -i 's/^;\(error_log\) .*/\1 = \/dev\/stderr/' /etc/php.ini; \
     sed -i 's/^\(listen.acl_users .*\)/;\1/' /etc/php-fpm.d/www.conf; \
-    sed -i 's/^\;(listen.owner =.*\)/\1 apache/' /etc/php-fpm.d/www.conf; \
-    sed -i 's/^\;(listen.group =.*\)/\1 apache/' /etc/php-fpm.d/www.conf; \
-    sed -i 's/^\;(listen.mode =.*\)/\1 666/' /etc/php-fpm.d/www.conf; \
+    sed -i 's/^;\(listen.owner =.*\)/\1 apache/' /etc/php-fpm.d/www.conf; \
+    sed -i 's/^;\(listen.group =.*\)/\1 apache/' /etc/php-fpm.d/www.conf; \
     mkdir /run/php-fpm; \
     dnf clean all;
 
