@@ -104,9 +104,9 @@ RUN { \
     echo '  sed -i "s/^#\(CustomLog .*\)/\1/" /etc/httpd/conf.d/ssl.conf'; \
     echo '  sed -i "s/^#\(ErrorLog .*\)/\1/" /etc/httpd/conf.d/ssl.conf'; \
     echo 'fi'; \
-    echo 'sed -i "s/^\(log_errors\) .*/\1 = Off/" /etc/php.ini'; \
+    echo 'sed -i "s/^\(php_admin_flag\[log_errors\]\) = .*/\1 = off/" /etc/php-fpm.d/www.conf'; \
     echo 'if [ ${HTTPD_PHP_ERROR_LOG,,} = "true" ]; then'; \
-    echo '  sed -i "s/^\(log_errors\) .*/\1 = On/" /etc/php.ini'; \
+    echo '  sed -i "s/^\(php_admin_flag\[log_errors\]\) = .*/\1 = on/" /etc/php-fpm.d/www.conf'; \
     echo 'fi'; \
     echo 'if [ -e /usr/share/phpMyAdmin/.htaccess ]; then'; \
     echo '  sed -i '\''/^# BEGIN REQUIRE SSL$/,/^# END REQUIRE SSL$/d'\'' /usr/share/phpMyAdmin/.htaccess'; \
