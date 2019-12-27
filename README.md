@@ -18,7 +18,7 @@
     
     ENV BASIC_AUTH false  
     ENV BASIC_AUTH_USER user  
-    ENV BASIC_AUTH_PASSWORD user
+    ENV BASIC_AUTH_PASSWORD password
     
     ENV HTTPD_LOG true  
     ENV HTTPD_LOG_LEVEL warn  
