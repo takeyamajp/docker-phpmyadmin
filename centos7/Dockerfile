@@ -70,34 +70,55 @@ RUN { \
     echo 'if [ ${HTTPD_PHP_ERROR_LOG,,} = "true" ]; then'; \
     echo '  sed -i "s/^\(log_errors\) .*/\1 = On/" /etc/php.ini'; \
     echo 'fi'; \
-    echo 'if [ -e /usr/share/phpMyAdmin/.htaccess ]; then'; \
-    echo '  sed -i '\''/^# BEGIN REQUIRE SSL$/,/^# END REQUIRE SSL$/d'\'' /usr/share/phpMyAdmin/.htaccess'; \
-    echo '  sed -i '\''/^# BEGIN GZIP COMPRESSION$/,/^# END GZIP COMPRESSION$/d'\'' /usr/share/phpMyAdmin/.htaccess'; \
+    echo 'if [ -e /etc/httpd/conf.d/requireSsl.conf ]; then'; \
+    echo '  rm -f /etc/httpd/conf.d/requireSsl.conf'; \
     echo 'fi'; \
     echo 'if [ ${REQUIRE_SSL,,} = "true" ]; then'; \
     echo '  {'; \
-    echo '  echo "# BEGIN REQUIRE SSL"'; \
     echo '  echo "<IfModule mod_rewrite.c>"'; \
     echo '  echo "  RewriteEngine On"'; \
     echo '  echo "  RewriteCond %{HTTPS} off"'; \
     echo '  echo "  RewriteCond %{HTTP:X-Forwarded-Proto} !https [NC]"'; \
     echo '  echo "  RewriteRule ^.*$ https://%{HTTP_HOST}%{REQUEST_URI} [R=301,L]"'; \
     echo '  echo "</IfModule>"'; \
-    echo '  echo "# END REQUIRE SSL"'; \
-    echo '  } >> /usr/share/phpMyAdmin/.htaccess'; \
+    echo '  } > /etc/httpd/conf.d/requireSsl.conf'; \
+    echo 'fi'; \
+    echo 'if [ -e /etc/httpd/conf.d/gzipCompression.conf ]; then'; \
+    echo '  rm -f /etc/httpd/conf.d/gzipCompression.conf'; \
     echo 'fi'; \
     echo 'if [ ${GZIP_COMPRESSION,,} = "true" ]; then'; \
     echo '  {'; \
-    echo '  echo "# BEGIN GZIP COMPRESSION"'; \
     echo '  echo "<IfModule mod_deflate.c>"'; \
     echo '  echo "<IfModule mod_filter.c>"'; \
     echo '  echo "  SetOutputFilter DEFLATE"'; \
     echo '  echo "  SetEnvIfNoCase Request_URI \.(?:gif|jpe?g|png)$ no-gzip dont-vary"'; \
     echo '  echo "</IfModule>"'; \
     echo '  echo "</IfModule>"'; \
-    echo '  echo "# END GZIP COMPRESSION"'; \
-    echo '  } >> /usr/share/phpMyAdmin/.htaccess'; \
-    echo 'fi'; \ 
+    echo '  } > /etc/httpd/conf.d/gzipCompression.conf'; \
+    echo 'fi'; \
+    echo 'if [ -e /etc/httpd/conf.d/.htpasswd ]; then'; \
+    echo '  sed -i '\''/^# BEGIN BASIC AUTH$/,/^# END BASIC AUTH$/d'\'' /etc/httpd/conf.d/phpMyAdmin.conf'; \
+    echo '  rm -f /etc/httpd/conf.d/.htpasswd'; \
+    echo 'fi'; \
+    echo 'if [ ${BASIC_AUTH,,} = "true" ]; then'; \
+    echo '  {'; \
+    echo '  echo "# BEGIN BASIC AUTH"'; \
+    echo '  echo "<Directory /usr/share/phpMyAdmin/>"'; \
+    echo '  if [ ${REQUIRE_SSL,,} = "true" ]; then'; \
+    echo '    echo "<If \"%{HTTPS} = '\''on'\''\">"'; \
+    echo '  fi'; \
+    echo '  echo "  AuthType Basic"'; \
+    echo '  echo "  AuthName '\''Basic Authentication'\''"'; \
+    echo '  echo "  AuthUserFile /etc/httpd/conf.d/.htpasswd"'; \
+    echo '  echo "  Require valid-user"'; \
+    echo '  if [ ${REQUIRE_SSL,,} = "true" ]; then'; \
+    echo '    echo "</If>"'; \
+    echo '  fi'; \
+    echo '  echo "</Directory>"'; \
+    echo '  echo "# END BASIC AUTH"'; \
+    echo '  } >> /etc/httpd/conf.d/phpMyAdmin.conf'; \
+    echo '  htpasswd -bmc /etc/httpd/conf.d/.htpasswd ${BASIC_AUTH_USER} ${BASIC_AUTH_PASSWORD} &>/dev/null'; \
+    echo 'fi'; \
     echo 'sed -i '\''/^# BEGIN DB SETTINGS$/,/^# END DB SETTINGS$/d'\'' /etc/phpMyAdmin/config.inc.php'; \
     echo '{'; \
     echo 'echo "# BEGIN DB SETTINGS"'; \
@@ -110,23 +131,6 @@ RUN { \
     echo 'echo "\$cfg['\''SaveDir'\''] = '\''/export'\'';"'; \
     echo 'echo "# END DB SETTINGS"'; \
     echo '} >> /etc/phpMyAdmin/config.inc.php'; \
-    echo 'if [ -e /usr/share/phpMyAdmin/.htpasswd ]; then'; \
-    echo '  sed -i '\''/^# BEGIN BASIC AUTH$/,/^# END BASIC AUTH$/d'\'' /etc/httpd/conf.d/phpMyAdmin.conf'; \
-    echo '  rm -f /usr/share/phpMyAdmin/.htpasswd'; \
-    echo 'fi'; \
-    echo 'if [ ${BASIC_AUTH,,} = "true" ]; then'; \
-    echo '  {'; \
-    echo '  echo "# BEGIN BASIC AUTH"'; \
-    echo '  echo "<Directory /usr/share/phpMyAdmin/>"'; \
-    echo '  echo "  AuthType Basic"'; \
-    echo '  echo "  AuthName '\''Basic Authentication'\''"'; \
-    echo '  echo "  AuthUserFile /usr/share/phpMyAdmin/.htpasswd"'; \
-    echo '  echo "  Require valid-user"'; \
-    echo '  echo "</Directory>"'; \
-    echo '  echo "# END BASIC AUTH"'; \
-    echo '  } >> /etc/httpd/conf.d/phpMyAdmin.conf'; \
-    echo '  htpasswd -bmc /usr/share/phpMyAdmin/.htpasswd ${BASIC_AUTH_USER} ${BASIC_AUTH_PASSWORD} &>/dev/null'; \
-    echo 'fi'; \
     echo 'chown -R apache:apache /export'; \
     echo 'exec "$@"'; \
     } > /usr/local/bin/entrypoint.sh; \
