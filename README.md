@@ -13,7 +13,7 @@
     
     ENV TIMEZONE Asia/Tokyo
     
-    ENV REQUIRE_SSL true  
+    ENV FORCE_SSL true  
     ENV GZIP_COMPRESSION true
     
     ENV BASIC_AUTH false  
