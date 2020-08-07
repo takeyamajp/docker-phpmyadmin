@@ -70,10 +70,10 @@ RUN { \
     echo 'if [ ${HTTPD_PHP_ERROR_LOG,,} = "true" ]; then'; \
     echo '  sed -i "s/^\(log_errors\) .*/\1 = On/" /etc/php.ini'; \
     echo 'fi'; \
-    echo 'if [ -e /etc/httpd/conf.d/requireSsl.conf ]; then'; \
-    echo '  rm -f /etc/httpd/conf.d/requireSsl.conf'; \
+    echo 'if [ -e /etc/httpd/conf.d/forceSsl.conf ]; then'; \
+    echo '  rm -f /etc/httpd/conf.d/forceSsl.conf'; \
     echo 'fi'; \
-    echo 'if [ ${REQUIRE_SSL,,} = "true" ]; then'; \
+    echo 'if [ ${FORCE_SSL,,} = "true" ]; then'; \
     echo '  {'; \
     echo '  echo "<IfModule mod_rewrite.c>"'; \
     echo '  echo "  RewriteEngine On"'; \
@@ -81,7 +81,7 @@ RUN { \
     echo '  echo "  RewriteCond %{HTTP:X-Forwarded-Proto} !https [NC]"'; \
     echo '  echo "  RewriteRule ^.*$ https://%{HTTP_HOST}%{REQUEST_URI} [R=301,L]"'; \
     echo '  echo "</IfModule>"'; \
-    echo '  } > /etc/httpd/conf.d/requireSsl.conf'; \
+    echo '  } > /etc/httpd/conf.d/forceSsl.conf'; \
     echo 'fi'; \
     echo 'if [ -e /etc/httpd/conf.d/gzipCompression.conf ]; then'; \
     echo '  rm -f /etc/httpd/conf.d/gzipCompression.conf'; \
@@ -104,14 +104,14 @@ RUN { \
     echo '  {'; \
     echo '  echo "# BEGIN BASIC AUTH"'; \
     echo '  echo "<Directory /usr/share/phpMyAdmin/>"'; \
-    echo '  if [ ${REQUIRE_SSL,,} = "true" ]; then'; \
+    echo '  if [ ${FORCE_SSL,,} = "true" ]; then'; \
     echo '    echo "<If \"%{HTTPS} = '\''on'\''\">"'; \
     echo '  fi'; \
     echo '  echo "  AuthType Basic"'; \
     echo '  echo "  AuthName '\''Basic Authentication'\''"'; \
     echo '  echo "  AuthUserFile /etc/httpd/conf.d/.htpasswd"'; \
     echo '  echo "  Require valid-user"'; \
-    echo '  if [ ${REQUIRE_SSL,,} = "true" ]; then'; \
+    echo '  if [ ${FORCE_SSL,,} = "true" ]; then'; \
     echo '    echo "</If>"'; \
     echo '  fi'; \
     echo '  echo "</Directory>"'; \
@@ -138,7 +138,7 @@ RUN { \
 
 ENV TIMEZONE Asia/Tokyo
 
-ENV REQUIRE_SSL true
+ENV FORCE_SSL true
 ENV GZIP_COMPRESSION true
 
 ENV BASIC_AUTH false
