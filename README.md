@@ -34,3 +34,40 @@ Star this repository if it is useful for you.
     
     EXPOSE 80  
     EXPOSE 443
+
+## How to use
+This container is supposed to be used as a backend of a reverse proxy server.  
+However, it can be simply used without the reverse proxy server.
+
+Example `docker-compose.yml`:
+
+    version: '3.1'  
+    services:  
+      wordpress:  
+        image: takeyamajp/phpmyadmin  
+        ports:  
+          - "8080:80"  
+        environment:  
+          FORCE_SSL: "false"  
+      mysql:  
+        image: takeyamajp/mysql  
+
+Run `docker-compose up -d`, wait for it to initialize completely. (It takes several minutes.)  
+Then, access it via `http://localhost:8080` or `http://host-ip:8080` in your browser.
+
+## Time zone
+You can use any time zone such as America/Chicago that can be used in CentOS.  
+
+See below for zones.  
+https://www.unicode.org/cldr/charts/latest/verify/zones/en.html
+
+## Force SSL
+If `FORCE_SSL` is true, the URL will be redirected automatically from HTTP to HTTPS protocol.
+
+## GZIP Compression
+The `GZIP_COMPRESSION` option will save bandwidth and increase browsing speed.  
+Normally, It is not necessary to be changed.
+
+## Basic Authentication
+Set `BASIC_AUTH` true if you want to use Basic Authentication.  
+When `FORCE_SSL` is true, it will be used after the protocol is redirected to HTTPS.
