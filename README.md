@@ -10,7 +10,7 @@ Star this repository if it is useful for you.
 - [`centos7`](https://github.com/takeyamajp/docker-phpmyadmin/blob/master/centos7/Dockerfile)
 
 ### Image summary
-    FROM centos:centos8  
+    FROM rockylinux/rockylinux:8   
     MAINTAINER "Hiroki Takeyama"
     
     ENV TIMEZONE Asia/Tokyo
@@ -57,7 +57,7 @@ Run `docker-compose up -d`, wait for it to initialize completely. (It takes seve
 Then, access it via `http://localhost:8080` or `http://host-ip:8080` in your browser.
 
 ## Time zone
-You can use any time zone such as America/Chicago that can be used in CentOS.  
+You can use any time zone such as America/Chicago that can be used in Rocky Linux.  
 
 See below for zones.  
 https://www.unicode.org/cldr/charts/latest/verify/zones/en.html
