@@ -5,16 +5,18 @@ Star this repository if it is useful for you.
 [![license](https://img.shields.io/github/license/takeyamajp/docker-phpmyadmin.svg)](https://github.com/takeyamajp/docker-phpmyadmin/blob/master/LICENSE)
 
 ### Supported tags and respective Dockerfile links  
-- [`latest`, `rocky8`](https://github.com/takeyamajp/docker-phpmyadmin/blob/master/rocky8/Dockerfile) (Rocky Linux)
+- [`latest`, `rocky9`](https://github.com/takeyamajp/docker-phpmyadmin/blob/master/rocky9/Dockerfile) (Rocky Linux 9)
+- [`rocky8`](https://github.com/takeyamajp/docker-phpmyadmin/blob/master/rocky8/Dockerfile) (Rocky Linux 8)
 - [`centos8`](https://github.com/takeyamajp/docker-phpmyadmin/blob/master/centos8/Dockerfile) (We have finished support to CentOS 8.)
 - [`centos7`](https://github.com/takeyamajp/docker-phpmyadmin/blob/master/centos7/Dockerfile)
 
 ### Image summary
-    FROM rockylinux/rockylinux:8   
+    FROM rockylinux/rockylinux:9   
     MAINTAINER "Hiroki Takeyama"
     
     ENV TIMEZONE Asia/Tokyo
     
+    ENV HOSTNAME www.example.com  
     ENV FORCE_SSL true  
     ENV GZIP_COMPRESSION true
     
@@ -22,6 +24,7 @@ Star this repository if it is useful for you.
     ENV BASIC_AUTH_USER user  
     ENV BASIC_AUTH_PASSWORD password
     
+    ENV HTTPD_SERVER_ADMIN root@localhost  
     ENV HTTPD_LOG true  
     ENV HTTPD_LOG_LEVEL warn  
     ENV HTTPD_PHP_ERROR_LOG true
@@ -31,7 +34,10 @@ Star this repository if it is useful for you.
     ENV PMA_USER root  
     ENV PMA_PASSWORD password
     
-    VOLUME /export
+    # Upload And Save Files  
+    VOLUME /export  
+    # SSL Certificates  
+    VOLUME /ssl_certs
     
     EXPOSE 80  
     EXPOSE 443
