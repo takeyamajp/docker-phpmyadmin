@@ -4,13 +4,13 @@ Star this repository if it is useful for you.
 [![Docker Pulls](https://img.shields.io/docker/pulls/takeyamajp/phpmyadmin.svg)](https://hub.docker.com/r/takeyamajp/phpmyadmin/)
 [![license](https://img.shields.io/github/license/takeyamajp/docker-phpmyadmin.svg)](https://github.com/takeyamajp/docker-phpmyadmin/blob/master/LICENSE)
 
-### Supported tags and respective Dockerfile links  
+## Supported tags and respective Dockerfile links  
 - [`latest`, `rocky9`](https://github.com/takeyamajp/docker-phpmyadmin/blob/master/rocky9/Dockerfile) (Rocky Linux 9)
 - [`rocky8`](https://github.com/takeyamajp/docker-phpmyadmin/blob/master/rocky8/Dockerfile) (Rocky Linux 8)
 - [`centos8`](https://github.com/takeyamajp/docker-phpmyadmin/blob/master/centos8/Dockerfile) (We have finished support to CentOS 8.)
 - [`centos7`](https://github.com/takeyamajp/docker-phpmyadmin/blob/master/centos7/Dockerfile)
 
-### Image summary
+## Image summary
     FROM rockylinux/rockylinux:9   
     MAINTAINER "Hiroki Takeyama"
     
@@ -46,7 +46,7 @@ Star this repository if it is useful for you.
 This container is supposed to be used as a backend of a reverse proxy server.  
 However, it can be simply used without the reverse proxy server.
 
-Example `docker-compose.yml`:
+### via [`docker-compose`](https://github.com/docker/compose)
 
     version: '3.1'  
     services:  
